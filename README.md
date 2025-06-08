@@ -91,6 +91,18 @@ provide_context(:welcome, { salutation: "Hello, world!" }) do
 end
 ```
 
+## Isolation level
+
+Depending on the needs of your project, you may want to change weft's isolation level. Changing the isolation level impacts where weft stores context information, either thread- or fiber-local storage.
+
+By default, weft uses thread-local storage. However, if you're using a webserver like [falcon](https://github.com/socketry/falcon) or [itsi](https://github.com/wouterken/itsi), you may want to switch to fiber-local storage to prevent fibers from messing with each other's weft contexts.
+
+```ruby
+Weft.isolation_level = :fiber  # or :thread
+```
+
+You can also change weft's isolation level by setting the `WEFT_ISOLATION_LEVEL` environment variable to `fiber` or `thread`.
+
 ## Running Tests
 
 `bundle exec rake` should do the trick.
