@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "weft"
+require "weft/ext/kernel_refinement"
 require "minitest/autorun"
 
 if ENV["WEFT_ISOLATION_LEVEL"] == "fiber"

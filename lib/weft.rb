@@ -81,7 +81,7 @@ module Weft
     end
   end
 
-  module KernelExtensions
+  module ContextMethods
     def provide_context(name, context_hash)
       context = Weft.context[name] ||= ContextStack.new
       context.push(context_hash)
@@ -94,9 +94,6 @@ module Weft
       yield Weft.context[name]&.context || EmptyContext.instance
     end
   end
-end
 
-module Kernel
-  include Weft::KernelExtensions
-  extend Weft::KernelExtensions
+  extend ContextMethods
 end
