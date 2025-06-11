@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    weft (1.0.0)
+    use_context (1.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -39,7 +39,7 @@ DEPENDENCIES
   debug
   minitest
   rake
-  weft!
+  use_context!
 
 BUNDLED WITH
    2.6.9

@@ -1,25 +1,23 @@
-## weft
+## use_context
 
-![Unit Tests](https://github.com/camertron/weft/actions/workflows/unit_tests.yml/badge.svg?branch=main)
-
-weft /wɛft/ noun: The horizontal threads that are interlaced through the warp in a woven fabric.
+![Unit Tests](https://github.com/camertron/use_context/actions/workflows/unit_tests.yml/badge.svg?branch=main)
 
 ## What is this thing?
 
-Weft is a tool for providing block-level context to Ruby programs in a thread-safe and fiber-safe way. Internally it leverages thread- or fiber-local storage. It can be used to provide data, etc to parts of your program that might be difficult or inconvenient to reach with eg. normal argument passing.
+use_context is a tool for providing block-level context to Ruby programs in a thread-safe and fiber-safe way. Internally it leverages thread- or fiber-local storage. It can be used to provide data, etc to parts of your program that might be difficult or inconvenient to reach with eg. normal argument passing.
 
-Weft was inspired by this use-case, and originally proposed as an addition to ViewComponent: https://github.com/ViewComponent/view_component/discussions/2327
+use_context was inspired by this use-case, and originally proposed as an addition to ViewComponent: https://github.com/ViewComponent/view_component/discussions/2327
 
 ## Usage
 
-There are three ways to use weft. As some folks are understandably uncomfortable using monkeypatches - especially ones applied to core classes and modules - you are free to choose the one that fits your preferences.
+There are three ways to use this gem. As some folks are understandably uncomfortable using monkeypatches - especially ones applied to core classes and modules - you are free to choose the one that fits your preferences.
 
 ### As a monkeypatch
 
 Add the following to your program or application somewhere:
 
 ```ruby
-require "weft/ext/kernel"
+require "use_context/ext/kernel"
 ```
 
 This will add two methods to `Kernel` so they are available everywhere: `provide_context`, and `use_context`. Contexts consist of a name and a hash of key/value pairs.
@@ -43,14 +41,14 @@ Values are available in the current context only for the duration of the block p
 Add the following to your program or application somewhere:
 
 ```ruby
-require "weft/ext/kernel_refinement"
+require "use_context/ext/kernel_refinement"
 ```
 
 The refinement can be enabled at the class, module, or file level, and adds the same two methods to `Kernel`. Refinements work differently than monkeypatching in that their changes are not globally applied and are only visible within the scope they are enabled in.
 
 ```ruby
 # Makes provide_context and use_context available on Kernel, but only within this file
-using Weft::KernelRefinement
+using UseContext::KernelRefinement
 
 provide_context(:welcome, { salutation: "Hello, world!" }) do
   ...
@@ -59,19 +57,19 @@ end
 
 ### No magic
 
-If you'd rather avoid modifying `Kernel` altogether, weft can also be used via the `Weft` constant.
+If you'd rather avoid modifying `Kernel` altogether, use_context can also be used via the `UseContext` constant.
 
 Add the following to your program or application somewhere:
 
 ```ruby
-require "weft"
+require "use_context"
 ```
 
-Then simply call `Weft.provide_context` and `Weft.use_context`:
+Then simply call `UseContext.provide_context` and `UseContext.use_context`:
 
 ```ruby
-Weft.provide_context(:welcome, { salutation: "Hello, world!" }) do
-  Weft.use_context(:welcome) do |context|
+UseContext.provide_context(:welcome, { salutation: "Hello, world!" }) do
+  WUseContexteft.use_context(:welcome) do |context|
     puts context[:salutation]  # prints "Hello, world!"
   end
 end
@@ -93,15 +91,15 @@ end
 
 ## Isolation level
 
-Depending on the needs of your project, you may want to change weft's isolation level. Changing the isolation level impacts where weft stores context information, either thread- or fiber-local storage.
+Depending on the needs of your project, you may want to change use_context's isolation level. Changing the isolation level impacts where use_context stores context information, either thread- or fiber-local storage.
 
-By default, weft uses thread-local storage. However, if you're using a webserver like [falcon](https://github.com/socketry/falcon) or [itsi](https://github.com/wouterken/itsi), you may want to switch to fiber-local storage to prevent fibers from messing with each other's weft contexts.
+By default, use_context uses thread-local storage. However, if you're using a webserver like [falcon](https://github.com/socketry/falcon) or [itsi](https://github.com/wouterken/itsi), you may want to switch to fiber-local storage to prevent fibers from messing with each other's contexts.
 
 ```ruby
-Weft.isolation_level = :fiber  # or :thread
+UseContext.isolation_level = :fiber  # or :thread
 ```
 
-You can also change weft's isolation level by setting the `WEFT_ISOLATION_LEVEL` environment variable to `fiber` or `thread`.
+You can also change use_context's isolation level by setting the `USE_CONTEXT_ISOLATION_LEVEL` environment variable to `fiber` or `thread`.
 
 ## Running Tests
 

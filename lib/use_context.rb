@@ -2,11 +2,11 @@
 
 require "singleton"
 
-module Weft
+module UseContext
   @isolation_level = nil
 
-  Thread.attr_accessor :weft_context
-  Fiber.attr_accessor :weft_context
+  Thread.attr_accessor :uc_context
+  Fiber.attr_accessor :uc_context
 
   class << self
     attr_reader :isolation_level, :scope
@@ -24,7 +24,7 @@ module Weft
         when :fiber; Fiber
         end
 
-      current.weft_context&.clear if @isolation_level
+      current.uc_context&.clear if @isolation_level
 
       @isolation_level = level
     end
@@ -34,7 +34,7 @@ module Weft
     end
 
     def context
-      current.weft_context ||= {}
+      current.uc_context ||= {}
     end
   end
 
@@ -83,7 +83,7 @@ module Weft
 
   module ContextMethods
     def provide_context(name, context_hash)
-      context = Weft.context[name] ||= ContextStack.new
+      context = UseContext.context[name] ||= ContextStack.new
       context.push(context_hash)
       yield
     ensure
@@ -91,15 +91,15 @@ module Weft
     end
 
     def use_context(name)
-      yield Weft.context[name]&.context || EmptyContext.instance
+      yield UseContext.context[name]&.context || EmptyContext.instance
     end
   end
 
   extend ContextMethods
 end
 
-if ENV["WEFT_ISOLATION_LEVEL"] == "fiber"
-  Weft.isolation_level = :fiber
+if ENV["USE_CONTEXT_ISOLATION_LEVEL"] == "fiber"
+  UseContext.isolation_level = :fiber
 else
-  Weft.isolation_level = :thread
+  UseContext.isolation_level = :thread
 end

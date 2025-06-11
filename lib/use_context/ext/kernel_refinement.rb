@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require "weft"
+require "use_context"
 
-module Weft
+module UseContext
   module KernelRefinement
     refine Kernel do
       def provide_context(...)
-        Weft.provide_context(...)
+        UseContext.provide_context(...)
       end
 
       def use_context(...)
-        Weft.use_context(...)
+        UseContext.use_context(...)
       end
     end
   end

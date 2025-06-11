@@ -17,4 +17,4 @@ jobs:
       - name: Run Tests
         run: bundle exec rake
         env:
-          WEFT_ISOLATION_LEVEL: ${{ matrix.isolation-level }}
+          USE_CONTEXT_ISOLATION_LEVEL: ${{ matrix.isolation-level }}

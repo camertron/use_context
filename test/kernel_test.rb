@@ -4,13 +4,13 @@ require "test_helper"
 
 # Use the refinement here rather than the monkeypatch, since we want to test both altering Kernel _and_ not altering it.
 # Depending on test order, applying the monkeypatch here could affect other tests and lead to false positives.
-using Weft::KernelRefinement
+using UseContext::KernelRefinement
 
-def __weft_provide_context_for_tests(&block)
+def __uc_provide_context_for_tests(&block)
   provide_context(:test, { key: :top_level_value }, &block)
 end
 
-def __weft_use_context_for_tests
+def __uc_use_context_for_tests
   use_context(:test) do |context|
     context[:key]
   end
@@ -62,8 +62,8 @@ class KernelTest < Minitest::Test
   end
 
   def test_provide_context_from_top_level
-    value = __weft_provide_context_for_tests do
-      __weft_use_context_for_tests
+    value = __uc_provide_context_for_tests do
+      __uc_use_context_for_tests
     end
 
     assert_equal :top_level_value, value
