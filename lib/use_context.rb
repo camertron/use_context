@@ -3,42 +3,17 @@
 require "singleton"
 
 module UseContext
-  @isolation_level = nil
-
-  Thread.attr_accessor :uc_context
   Fiber.attr_accessor :uc_context
 
   class << self
-    attr_reader :isolation_level, :scope
-
-    def isolation_level=(level)
-      return if level == @isolation_level
-
-      unless %i(thread fiber).include?(level)
-        raise ArgumentError, "isolation_level must be `:thread` or `:fiber`, got: `#{level.inspect}`"
-      end
-
-      @scope =
-        case level
-        when :thread; Thread
-        when :fiber; Fiber
-        end
-
-      current.uc_context&.clear if @isolation_level
-
-      @isolation_level = level
-    end
-
     def current
-      scope.current
+      Fiber.current
     end
 
     def context
       current.uc_context ||= {}
     end
   end
-
-  self.isolation_level = :thread
 
   class EmptyContext
     include Singleton
@@ -96,10 +71,4 @@ module UseContext
   end
 
   extend ContextMethods
-end
-
-if ENV["USE_CONTEXT_ISOLATION_LEVEL"] == "fiber"
-  UseContext.isolation_level = :fiber
-else
-  UseContext.isolation_level = :thread
 end

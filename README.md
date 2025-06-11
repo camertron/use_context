@@ -4,7 +4,7 @@
 
 ## What is this thing?
 
-use_context is a tool for providing block-level context to Ruby programs in a thread-safe and fiber-safe way. Internally it leverages thread- or fiber-local storage. It can be used to provide data, etc to parts of your program that might be difficult or inconvenient to reach with eg. normal argument passing.
+use_context is a tool for providing block-level context to Ruby programs in a thread-safe and fiber-safe way. Internally it leverages fiber-local storage. It can be used to provide data, etc to parts of your program that might be difficult or inconvenient to reach with eg. normal argument passing.
 
 use_context was inspired by this use-case, and originally proposed as an addition to ViewComponent: https://github.com/ViewComponent/view_component/discussions/2327
 
@@ -88,18 +88,6 @@ provide_context(:welcome, { salutation: "Hello, world!" }) do
   speak  # prints "Hello, world!"
 end
 ```
-
-## Isolation level
-
-Depending on the needs of your project, you may want to change use_context's isolation level. Changing the isolation level impacts where use_context stores context information, either thread- or fiber-local storage.
-
-By default, use_context uses thread-local storage. However, if you're using a webserver like [falcon](https://github.com/socketry/falcon) or [itsi](https://github.com/wouterken/itsi), you may want to switch to fiber-local storage to prevent fibers from messing with each other's contexts.
-
-```ruby
-UseContext.isolation_level = :fiber  # or :thread
-```
-
-You can also change use_context's isolation level by setting the `USE_CONTEXT_ISOLATION_LEVEL` environment variable to `fiber` or `thread`.
 
 ## Running Tests
 

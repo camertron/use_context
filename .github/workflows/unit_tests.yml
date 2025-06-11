@@ -6,7 +6,6 @@ jobs:
     strategy:
       matrix:
         ruby-version: [3.2, 3.3, 3.4]
-        isolation-level: ['thread', 'fiber']
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby ${{ matrix.ruby-version }}
@@ -16,5 +15,3 @@ jobs:
           bundler-cache: true
       - name: Run Tests
         run: bundle exec rake
-        env:
-          USE_CONTEXT_ISOLATION_LEVEL: ${{ matrix.isolation-level }}
