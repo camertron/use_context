@@ -69,7 +69,7 @@ Then simply call `UseContext.provide_context` and `UseContext.use_context`:
 
 ```ruby
 UseContext.provide_context(:welcome, { salutation: "Hello, world!" }) do
-  WUseContexteft.use_context(:welcome) do |context|
+  UseContext.use_context(:welcome) do |context|
     puts context[:salutation]  # prints "Hello, world!"
   end
 end
