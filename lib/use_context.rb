@@ -87,7 +87,7 @@ module UseContext
       if keys.empty?
         yield context
       else
-        yield keys.map { |key| context[key] }
+        yield(*keys.map { |key| context[key] })
       end
     end
   end
