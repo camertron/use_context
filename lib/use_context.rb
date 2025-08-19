@@ -21,6 +21,14 @@ module UseContext
     def [](_key)
       nil
     end
+
+    def empty?
+      true
+    end
+
+    def present?
+      false
+    end
   end
 
   class Context
@@ -36,6 +44,14 @@ module UseContext
       end
 
       nil
+    end
+
+    def empty?
+      false
+    end
+
+    def present?
+      true
     end
   end
 
@@ -65,8 +81,14 @@ module UseContext
       context.pop if context
     end
 
-    def use_context(name)
-      yield UseContext.context[name]&.context || EmptyContext.instance
+    def use_context(name, *keys)
+      context = UseContext.context[name]&.context || EmptyContext.instance
+
+      if keys.empty?
+        yield context
+      else
+        yield keys.map { |key| context[key] }
+      end
     end
   end
 

@@ -100,4 +100,13 @@ class KernelTest < Minitest::Test
       end
     end
   end
+
+  def test_use_context_can_extract_given_keys
+    provide_context(:test, { setting1: :a, setting2: :b }) do
+      use_context(:test, :setting1, :setting2) do |setting1, setting2|
+        assert_equal :a, setting1
+        assert_equal :b, setting2
+      end
+    end
+  end
 end

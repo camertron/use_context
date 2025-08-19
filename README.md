@@ -10,7 +10,7 @@ use_context was inspired by this use-case, and originally proposed as an additio
 
 ## Usage
 
-There are three ways to use this gem. As some folks are understandably uncomfortable using monkeypatches - especially ones applied to core classes and modules - you are free to choose the one that fits your preferences.
+There are four ways to use this gem. As some folks are understandably uncomfortable using monkeypatches - especially ones applied to core classes and modules - you are free to choose the one that fits your preferences.
 
 ### As a monkeypatch
 
@@ -55,6 +55,28 @@ provide_context(:welcome, { salutation: "Hello, world!" }) do
 end
 ```
 
+### As a mixin
+
+If you'd rather opt-in to use_context's methods on a per-class or per-module basis, you can include the `ContextMethods` mixin:
+
+```ruby
+require "use_context"
+
+class MyClass
+  include UseContext::ContextMethods
+
+  def speak
+    use_context(:welcome) do |context|
+      puts context[:salutation]
+    end
+  end
+end
+
+UseContext.provide_context(:welcome, { salutation: "Hello, world!" }) do
+  MyClass.new.speak  # prints "Hello, world!"
+end
+```
+
 ### No magic
 
 If you'd rather avoid modifying `Kernel` altogether, use_context can also be used via the `UseContext` constant.
@@ -86,6 +108,18 @@ provide_context(:welcome, { salutation: "Hello, world!" }) do
   end
 
   speak  # prints "Hello, world!"
+end
+```
+
+## Extracting individual keys
+
+The `use_context` method allows extracting individual keys from the current context. All arguments after the context name are treated as keys to extract. The extracted values are passed to the block in the order they are specified:
+
+```ruby
+provide_context(:welcome, { salutation: "Hello", recipient: "world" }) do
+  use_context(:welcome, :salutation, :recipient) do |salutation, recipient|
+    puts "#{salutation}, #{recipient}!"  # prints "Hello, world!"
+  end
 end
 ```
 
