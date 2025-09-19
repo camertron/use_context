@@ -85,9 +85,15 @@ module UseContext
       context = UseContext.context[name]&.context || EmptyContext.instance
 
       if keys.empty?
-        yield context
+        block_given? ? yield(context) : context
       else
-        yield(*keys.map { |key| context[key] })
+        values = keys.map { |key| context[key] }
+
+        if block_given?
+          yield(*values)
+        else
+          values.size == 1 ? values.first : values
+        end
       end
     end
   end

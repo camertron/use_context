@@ -1,3 +1,11 @@
+# 1.2.0
+* Augments the behavior of `use_context` to return the context object or the extracted values if a block is not provided:
+    ```ruby
+    use_context(:foo)             # returns the context object
+    use_context(:foo, :bar)       # => "bar"
+    use_context(:foo, :bar, :baz) # => ["bar", "baz"]
+    ```
+
 # 1.1.1
 * Fix bug in context extraction that would yield an array instead of a value when only a single key was specified.
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    use_context (1.1.1)
+    use_context (1.2.0)
 
 GEM
   remote: https://rubygems.org/

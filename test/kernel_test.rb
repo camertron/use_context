@@ -117,4 +117,27 @@ class KernelTest < Minitest::Test
       end
     end
   end
+
+  def test_use_context_returns_context_object_when_given_no_keys_and_no_block
+    provide_context(:test, { setting1: :a, setting2: :b }) do
+      context = use_context(:test)
+      assert_equal :a, context[:setting1]
+      assert_equal :b, context[:setting2]
+    end
+  end
+
+  def test_use_context_returns_extracted_values_when_given_keys_and_no_block
+    provide_context(:test, { setting1: :a, setting2: :b }) do
+      setting1, setting2 = use_context(:test, :setting1, :setting2)
+      assert_equal :a, setting1
+      assert_equal :b, setting2
+    end
+  end
+
+  def test_use_context_returns_single_extracted_value_when_given_a_key_and_no_block
+    provide_context(:test, { setting1: :a, setting2: :b }) do
+      setting1 = use_context(:test, :setting1)
+      assert_equal :a, setting1
+    end
+  end
 end
